@@ -1,0 +1,17 @@
+stages:
+  - test
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository
+
+test:
+  stage: test
+  image: rvancea/maven-chrome-jdk8:latest
+  before_script:
+    - apt-get update -qq && apt-get install -y openjdk-16-headless
+  script:
+    - mvn clean test

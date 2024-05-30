@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="SmokeTestSuite">
+    <test name="SmokeTest" parallel="none">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.tests.E2ETest"/>
+        </classes>
+    </test>
+</suite>
