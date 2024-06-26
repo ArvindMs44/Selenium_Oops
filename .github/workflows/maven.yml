@@ -17,6 +17,7 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
           cache: maven
+          node-version: '20'
       - name: Build and Test on Windows
         run: mvn compile test "-Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml"
       - name: Generate Report on Windows
@@ -32,6 +33,7 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
           cache: maven
+          node-version: '20'
       - name: Build and Test on macOS
         run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
       - name: Generate Report on macOS
@@ -47,6 +49,7 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
           cache: maven
+          node-version: '20'
       - name: Build and Test on Ubuntu
         run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
       - name: Generate Report on Ubuntu
