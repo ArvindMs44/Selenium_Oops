@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Selenium Practice
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build and Test on Windows
-        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+        run: mvn compile test "-Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml"
 
   test_macos:
     runs-on: macos-latest
