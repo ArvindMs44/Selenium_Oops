@@ -24,7 +24,7 @@ public class BaseTest {
                 ChromeOptions chromeOptions = new ChromeOptions();
                 WebDriverManager.chromedriver().setup();
                 chromeOptions.addArguments("--remote-allow-origins=*");
-                ScreenRecorderClass.startRecord("ScreenRecordingChrome");
+//                ScreenRecorderClass.startRecord("ScreenRecordingChrome");
                 driver = new ChromeDriver(chromeOptions);
                 break;
             case "edge":
@@ -49,7 +49,7 @@ public class BaseTest {
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
-        ScreenRecorderClass.stopRecord();
+//        ScreenRecorderClass.stopRecord();
         driver.quit();
     }
 
