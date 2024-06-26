@@ -24,6 +24,7 @@ public class BaseTest {
                 ChromeOptions chromeOptions = new ChromeOptions();
                 WebDriverManager.chromedriver().setup();
                 chromeOptions.addArguments("--remote-allow-origins=*");
+                chromeOptions.setHeadless(true);
 //                ScreenRecorderClass.startRecord("ScreenRecordingChrome");
                 driver = new ChromeDriver(chromeOptions);
                 break;
