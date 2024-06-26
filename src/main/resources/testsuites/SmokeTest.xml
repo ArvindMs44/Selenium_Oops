@@ -3,7 +3,7 @@
     <test name="SmokeTest" parallel="none">
         <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="com.tests.E2ETest"/>
+            <class name="com.tests.LoginPageTest"/>
         </classes>
     </test>
 </suite>
