@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.*;
 import utils.ScreenRecorderClass;
 import java.time.Duration;
@@ -32,13 +33,17 @@ public class BaseTest {
                 EdgeOptions edgeOptions = new EdgeOptions();
                 WebDriverManager.edgedriver().setup();
                 edgeOptions.addArguments("--remote-allow-origins=*");
-                ScreenRecorderClass.startRecord("ScreenRecordingEdge");
+                edgeOptions.setHeadless(true);
+//                ScreenRecorderClass.startRecord("ScreenRecordingEdge");
                 driver = new EdgeDriver(edgeOptions);
                 break;
             case "firefox":
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
                 WebDriverManager.firefoxdriver().setup();
-                ScreenRecorderClass.startRecord("ScreenRecordingFirefox");
-                driver = new FirefoxDriver();
+                firefoxOptions.addArguments("--remote-allow-origins=*");
+                firefoxOptions.setHeadless(true);
+//                ScreenRecorderClass.startRecord("ScreenRecordingFirefox");
+                driver = new FirefoxDriver(firefoxOptions);
                 break;
             default:
                 throw new IllegalArgumentException("Browser not supported: " + browser);
