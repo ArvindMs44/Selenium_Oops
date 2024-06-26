@@ -1,17 +1,36 @@
-stages:
-  - test
+image: maven:3.8.1-jdk-11
 
-variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+stages:
+  - build
+  - test
 
 cache:
   paths:
     - .m2/repository
 
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+
+before_script:
+  - echo "Maven project is building..."
+
+build:
+  stage: build
+  script:
+    - mvn $MAVEN_CLI_OPTS clean install
+  artifacts:
+    paths:
+      - target/*.jar
+
 test:
   stage: test
-  image: rvancea/maven-chrome-jdk8:latest
-  before_script:
-    - apt-get update -qq && apt-get install -y openjdk-16-headless
   script:
-    - mvn clean test
+    - mvn $MAVEN_CLI_OPTS test
+  artifacts:
+    when: always
+    paths:
+      - target/surefire-reports
+      - target/failsafe-reports
+  only:
+    - master
+    - merge_requests
