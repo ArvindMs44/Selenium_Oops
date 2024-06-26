@@ -4,20 +4,25 @@ stages:
   - build
   - test
 
+services:
+  - selenium/standalone-chrome:latest
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
 cache:
   paths:
     - .m2/repository
 
-variables:
-  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
-
 before_script:
-  - echo "Maven project is building..."
+  - export DISPLAY=:99.0
+  - mvn --version
+  - google-chrome --version
 
 build:
   stage: build
   script:
-    - mvn $MAVEN_CLI_OPTS clean install
+    - mvn $MAVEN_OPTS clean install
   artifacts:
     paths:
       - target/*.jar
@@ -25,8 +30,9 @@ build:
 test:
   stage: test
   script:
-    - mvn $MAVEN_CLI_OPTS test
+    - mvn $MAVEN_OPTS test
   artifacts:
+    when: always
     paths:
       - target/surefire-reports
       - target/failsafe-reports
