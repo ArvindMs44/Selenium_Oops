@@ -27,7 +27,6 @@ test:
   script:
     - mvn $MAVEN_CLI_OPTS test
   artifacts:
-    when: always
     paths:
       - target/surefire-reports
       - target/failsafe-reports
