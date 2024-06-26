@@ -49,7 +49,7 @@
         </executions>
         <configuration>
           <suiteXmlFiles>
-            <suiteXmlFile>src/main/resources/testsuites/RegressionTest.xml</suiteXmlFile>
+            <suiteXmlFile>src/main/resources/testsuites/SmokeTest.xml</suiteXmlFile>
           </suiteXmlFiles>
         </configuration>
       </plugin>
