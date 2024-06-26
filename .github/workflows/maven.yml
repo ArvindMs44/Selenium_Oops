@@ -18,7 +18,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build and Test on Windows
-        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/RegressionTest.xml
+        run: mvn compile test "-Dsurefire.suiteXmlFiles=src/main/resources/testsuites/RegressionTest.xml"
       - name: Generate Report on Windows
         run: mvn surefire-report:report
 
