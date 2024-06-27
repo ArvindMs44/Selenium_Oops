@@ -19,7 +19,7 @@ jobs:
           cache: maven
           node-version: '20'
       - name: Build and Test on Windows
-        run: mvn compile test "-Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml"
+        run: mvn compile test "-Dsurefire.suiteXmlFiles=src/main/resources/testsuites/CrossBrowserTest.xml"
 
   test_macos:
     runs-on: macos-latest
@@ -33,7 +33,7 @@ jobs:
           cache: maven
           node-version: '20'
       - name: Build and Test on macOS
-        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/CrossBrowserTest.xml
 
   test_ubuntu:
     runs-on: ubuntu-latest
@@ -47,4 +47,4 @@ jobs:
           cache: maven
           node-version: '20'
       - name: Build and Test on Ubuntu
-        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/CrossBrowserTest.xml
