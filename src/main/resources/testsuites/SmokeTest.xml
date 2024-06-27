@@ -4,6 +4,7 @@
         <parameter name="browser" value="chrome"/>
         <classes>
             <class name="com.tests.LoginPageTest"/>
+            <class name="com.tests.HomePageTest"/>
         </classes>
     </test>
 </suite>
