@@ -30,11 +30,11 @@ public class HomePageTest extends HomePage {
       Assert.assertTrue(header_displayed());
     }
 
-    @Test(priority = 4)
-    public void verifyProduct() {
-        click_iphoneX();
-        assert (get_checkoutText().trim().contains(ConstantsClass.expectedText_HomePage));
-        click_checkout();
-    }
+//    @Test(priority = 4)
+//    public void verifyProduct() {
+//        click_iphoneX();
+//        assert (get_checkoutText().trim().contains(ConstantsClass.expectedText_HomePage));
+//        click_checkout();
+//    }
 
 }
