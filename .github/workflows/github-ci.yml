@@ -1,154 +1,224 @@
-name: Java CI with Maven
+name: Rest Assured Java Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
+  schedule:
+    - cron: '25 20 * * *'
 
 jobs:
-  test_windows_chrome:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on Windows
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install ChromeDriver
-        run: choco install -y chromedriver
-      - name: Build and Test on Windows with Chrome
-        run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-  test_windows_firefox:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on Windows
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install GeckoDriver
-        run: choco install -y geckodriver
-      - name: Build and Test on Windows with Firefox
-        run: mvn compile test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-  test_windows_edge:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on Windows
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install EdgeDriver
-        run: choco install -y msedgedriver
-      - name: Build and Test on Windows with Edge
-        run: mvn compile test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-  test_macos_chrome:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on macOS
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install ChromeDriver
-        run: brew install chromedriver
-      - name: Build and Test on macOS with Chrome
-        run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-  test_macos_firefox:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on macOS
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install GeckoDriver
-        run: brew install geckodriver
-      - name: Build and Test on macOS with Firefox
-        run: mvn compile test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-  test_macos_edge:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on macOS
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install EdgeDriver
-        run: brew install --cask microsoft-edge
-      - name: Build and Test on macOS with Edge
-        run: mvn compile test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-  test_ubuntu_chrome:
+  test-ubuntu-chrome:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on Ubuntu
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install ChromeDriver
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Maven
         run: |
           sudo apt-get update
+          sudo apt-get install -y maven
+
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Chrome WebDriver
+        run: |
           sudo apt-get install -y chromium-chromedriver
-          sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
-      - name: Build and Test on Ubuntu with Chrome
-        run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+          if [ ! -f /usr/bin/chromedriver ]; then
+            sudo ln -sf /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
+          fi
 
-  test_ubuntu_firefox:
+      - name: Build and Test with Maven - Chrome
+        run: mvn clean test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+
+  test-ubuntu-firefox:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on Ubuntu
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install GeckoDriver
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Maven
         run: |
           sudo apt-get update
-          sudo apt-get install -y firefox-geckodriver
-      - name: Build and Test on Ubuntu with Firefox
-        run: mvn compile test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+          sudo apt-get install -y maven
 
-  test_ubuntu_edge:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 on Ubuntu
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-      - name: Install EdgeDriver
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Firefox WebDriver
         run: |
-          curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-          sudo install -o root -g root -m 644 microsoft.gpg /usr/share/keyrings/
-          sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list'
-          sudo apt update
-          sudo apt install -y microsoft-edge-stable
-          sudo apt install -y msedgedriver
-      - name: Build and Test on Ubuntu with Edge
-        run: mvn compile test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+          wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz
+          tar -xzf geckodriver-v0.30.0-linux64.tar.gz
+          chmod +x geckodriver
+          sudo mv geckodriver /usr/local/bin/
+
+      - name: Build and Test with Maven - Firefox
+        run: mvn clean test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+
+  test-ubuntu-edge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Maven
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y maven
+
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Edge WebDriver (Placeholder for Ubuntu)
+        run: echo "No Edge WebDriver setup needed for Ubuntu"
+
+      - name: Build and Test with Maven - Edge
+        run: mvn clean test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+
+  test-macos-chrome:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Maven
+        run: brew install maven
+
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Chrome WebDriver
+        run: |
+          brew install chromedriver
+
+      - name: Build and Test with Maven - Chrome
+        run: mvn clean test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+
+  test-macos-firefox:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Maven
+        run: brew install maven
+
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Firefox WebDriver
+        run: |
+          brew install geckodriver
+
+      - name: Build and Test with Maven - Firefox
+        run: mvn clean test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+
+  test-macos-edge:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Maven
+        run: brew install maven
+
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Edge WebDriver (Placeholder for macOS)
+        run: echo "No Edge WebDriver setup needed for macOS"
+
+      - name: Build and Test with Maven - Edge
+        run: mvn clean test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+
+  test-windows-chrome:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11 and Maven
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Install Maven
+        run: |
+          choco install -y maven
+
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Chrome WebDriver
+        run: |
+          choco install -y chromedriver
+
+      - name: Build and Test with Maven - Chrome
+        run: mvn clean test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+
+  test-windows-firefox:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11 and Maven
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Install Maven
+        run: |
+          choco install -y maven
+
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Firefox WebDriver
+        run: |
+          # Download geckodriver
+          Invoke-WebRequest -Uri "https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-win64.zip" -OutFile geckodriver.zip
+          Expand-Archive geckodriver.zip -DestinationPath $env:ProgramFiles\geckodriver
+          $env:Path += ";$env:ProgramFiles\geckodriver"
+
+      - name: Build and Test with Maven - Firefox
+        run: mvn clean test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+
+  test-windows-edge:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11 and Maven
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Install Maven
+        run: |
+          choco install -y maven
+
+      - name: Verify Maven Installation
+        run: mvn -version
+
+      - name: Set up Edge WebDriver
+        run: |
+          echo "Placeholder for installing Edge WebDriver on Windows"
+
+      - name: Build and Test with Maven - Edge
+        run: mvn clean test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
