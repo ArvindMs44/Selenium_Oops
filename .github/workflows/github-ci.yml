@@ -7,76 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test_windows_chrome:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 and Chrome WebDriver on Windows
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-          node-version: '20'
-      - name: Install Chrome WebDriver
-        run: choco install -y chromedriver
-      - name: Build and Test on Windows - Chrome
-        run: |
-          echo "Running tests on Windows - Chrome"
-          mvn clean test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-      - name: Set status with platform and browser icons
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const status = process.env.STATUS || 'success';
-            const emoji = status === 'success' ? '✅' : '❌';
-            const platformImage = '![Windows](https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Windows_10_Logo.svg/240px-Windows_10_Logo.svg.png)';
-            const browserImage = '![Chrome](https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Chrome_icon_%28September_2014%29.svg)';
-            github.actions.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${platformImage} ${browserImage} Tests on Windows - Chrome ${emoji}`
-            });
-
-  test_windows_firefox:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 and Firefox WebDriver on Windows
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-          node-version: '20'
-      - name: Install Firefox WebDriver
-        run: |
-          Invoke-WebRequest -Uri "https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-win64.zip" -OutFile geckodriver.zip
-          Expand-Archive geckodriver.zip -DestinationPath $env:ProgramFiles\geckodriver
-          $env:Path += ";$env:ProgramFiles\geckodriver"
-      - name: Build and Test on Windows - Firefox
-        run: |
-          echo "Running tests on Windows - Firefox"
-          mvn clean test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-      - name: Set status with platform and browser icons
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const status = process.env.STATUS || 'success';
-            const emoji = status === 'success' ? '✅' : '❌';
-            const platformImage = '![Windows](https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Windows_10_Logo.svg/240px-Windows_10_Logo.svg.png)';
-            const browserImage = '![Firefox](https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2017.svg)';
-            github.actions.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${platformImage} ${browserImage} Tests on Windows - Firefox ${emoji}`
-            });
-
-  test_windows_edge:
+  test_windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -87,93 +18,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
           node-version: '20'
-      - name: Build and Test on Windows - Edge
-        run: |
-          echo "Running tests on Windows - Edge"
-          mvn clean test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-      - name: Set status with platform and browser icons
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const status = process.env.STATUS || 'success';
-            const emoji = status === 'success' ? '✅' : '❌';
-            const platformImage = '![Windows](https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Windows_10_Logo.svg/240px-Windows_10_Logo.svg.png)';
-            const browserImage = '![Edge](https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Microsoft_Edge_logo.svg/200px-Microsoft_Edge_logo.svg.png)';
-            github.actions.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${platformImage} ${browserImage} Tests on Windows - Edge ${emoji}`
-            });
+      - name: Build and Test on Windows
+        run: mvn compile test "-Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml"
 
-  test_macos_chrome:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 and Chrome WebDriver on macOS
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-          node-version: '20'
-      - name: Install Chrome WebDriver
-        run: brew install chromedriver
-      - name: Build and Test on macOS - Chrome
-        run: |
-          echo "Running tests on macOS - Chrome"
-          mvn clean test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-      - name: Set status with platform and browser icons
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const status = process.env.STATUS || 'success';
-            const emoji = status === 'success' ? '✅' : '❌';
-            const platformImage = '![macOS](https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/OSX_El_Capitan_logo.svg/160px-OSX_El_Capitan_logo.svg.png)';
-            const browserImage = '![Chrome](https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Chrome_icon_%28September_2014%29.svg)';
-            github.actions.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${platformImage} ${browserImage} Tests on macOS - Chrome ${emoji}`
-            });
-
-  test_macos_firefox:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 20 and Firefox WebDriver on macOS
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          cache: maven
-          node-version: '20'
-      - name: Install Firefox WebDriver
-        run: brew install geckodriver
-      - name: Build and Test on macOS - Firefox
-        run: |
-          echo "Running tests on macOS - Firefox"
-          mvn clean test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-      - name: Set status with platform and browser icons
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const status = process.env.STATUS || 'success';
-            const emoji = status === 'success' ? '✅' : '❌';
-            const platformImage = '![macOS](https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/OSX_El_Capitan_logo.svg/160px-OSX_El_Capitan_logo.svg.png)';
-            const browserImage = '![Firefox](https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2017.svg)';
-            github.actions.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${platformImage} ${browserImage} Tests on macOS - Firefox ${emoji}`
-            });
-
-  test_macos_edge:
+  test_macos:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -184,41 +32,19 @@ jobs:
           distribution: 'temurin'
           cache: maven
           node-version: '20'
-      - name: Build and Test on macOS - Edge
-        run: |
-          echo "Running tests on macOS - Edge"
-          mvn clean test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-      - name: Set status with platform and browser icons
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const status = process.env.STATUS || 'success';
-            const emoji = status === 'success' ? '✅' : '❌';
-            const platformImage = '![macOS](https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/OSX_El_Capitan_logo.svg/160px-OSX_El_Capitan_logo.svg.png)';
-            const browserImage = '![Edge](https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Microsoft_Edge_logo.svg/200px-Microsoft_Edge_logo.svg.png)';
-            github.actions.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${platformImage} ${browserImage} Tests on macOS - Edge ${emoji}`
-            });
+      - name: Build and Test on macOS
+        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
 
-  test_ubuntu_chrome:
+  test_ubuntu:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 20 and Chrome WebDriver on Ubuntu
+      - name: Set up JDK 20 on Ubuntu
         uses: actions/setup-java@v3
         with:
           java-version: '20'
           distribution: 'temurin'
           cache: maven
           node-version: '20'
-      - name: Install Chrome WebDriver
-        run: |
-          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-          sudo apt-get update
-          sudo apt-get install google-chrome-stable
-          wget https://chromedriver.storage.googleapis.com/94.0.
+      - name: Build and Test on Ubuntu
+        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
