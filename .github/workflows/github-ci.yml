@@ -31,7 +31,9 @@ jobs:
       - name: Set up EdgeDriver on Windows
         run: |
           choco install microsoft-edge
-          choco install msedgedriver
+          Invoke-WebRequest -Uri https://msedgedriver.azureedge.net/114.0.1823.51/edgedriver_win64.zip -OutFile msedgedriver.zip
+          Expand-Archive -Path msedgedriver.zip -DestinationPath $Env:USERPROFILE/.drivers
+          $Env:PATH += ";$Env:USERPROFILE/.drivers"
 
       - name: Build and Test on Windows (Chrome)
         run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
@@ -64,7 +66,11 @@ jobs:
           sudo mv geckodriver /usr/local/bin/
 
       - name: Set up EdgeDriver on macOS
-        run: brew install --cask microsoft-edge
+        run: |
+          brew install --cask microsoft-edge
+          wget https://msedgedriver.azureedge.net/114.0.1823.51/edgedriver_mac64.zip
+          unzip edgedriver_mac64.zip
+          sudo mv msedgedriver /usr/local/bin/
 
       - name: Build and Test on macOS (Chrome)
         run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
@@ -99,10 +105,9 @@ jobs:
 
       - name: Set up EdgeDriver on Ubuntu
         run: |
-          wget https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/44fbd734-8020-4ed8-bbda-9b1cf8e139e2/MicrosoftEdge-Dev_91.0.864.15-1_amd64.deb
-          sudo dpkg -i MicrosoftEdge-Dev_91.0.864.15-1_amd64.deb
-          sudo apt-get install -f
-          sudo apt-get install msedge
+          wget https://msedgedriver.azureedge.net/114.0.1823.51/edgedriver_linux64.zip
+          unzip edgedriver_linux64.zip
+          sudo mv msedgedriver /usr/local/bin/
 
       - name: Build and Test on Ubuntu (Chrome)
         run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
