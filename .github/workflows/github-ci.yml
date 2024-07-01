@@ -22,7 +22,9 @@ jobs:
         uses: browser-actions/setup-chrome@v1
 
       - name: Set up GeckoDriver (Firefox) on Windows
-        uses: browser-actions/setup-geckodriver@v1
+        run: |
+          choco install firefox
+          choco install geckodriver
 
       - name: Set up EdgeDriver on Windows
         run: |
@@ -82,14 +84,16 @@ jobs:
         uses: browser-actions/setup-chrome@v1
 
       - name: Set up GeckoDriver (Firefox) on Ubuntu
-        run: sudo apt-get install -y firefox-geckodriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox-geckodriver
 
       - name: Set up EdgeDriver on Ubuntu
         run: |
-          sudo apt-get install -y software-properties-common
-          sudo add-apt-repository ppa:mozillateam/ppa
-          sudo apt-get update
-          sudo apt-get install -y microsoft-edge-stable
+          wget https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/44fbd734-8020-4ed8-bbda-9b1cf8e139e2/MicrosoftEdge-Dev_91.0.864.15-1_amd64.deb
+          sudo dpkg -i MicrosoftEdge-Dev_91.0.864.15-1_amd64.deb
+          sudo apt-get install -f
+          sudo apt-get install msedge
 
       - name: Build and Test on Ubuntu (Chrome)
         run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
