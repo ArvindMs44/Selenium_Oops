@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test_windows:
+  Test_Windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       - name: Build and Test on Windows
         run: mvn compile test "-Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml"
 
-  test_macos:
+  Test_Macos:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +35,7 @@ jobs:
       - name: Build and Test on macOS
         run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
 
-  test_ubuntu:
+  Test_Ubuntu:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
