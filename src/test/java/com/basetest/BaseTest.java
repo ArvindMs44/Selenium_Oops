@@ -19,7 +19,7 @@ public class BaseTest {
 
     @BeforeClass(alwaysRun = true)
     @Parameters("browser")
-    public void setUp(@Optional("chrome") String browser) throws Exception {
+    public void setUp(@Optional("edge") String browser) throws Exception {
         switch (browser.toLowerCase()) {
             case "chrome":
                 ChromeOptions chromeOptions = new ChromeOptions();
