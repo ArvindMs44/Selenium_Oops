@@ -24,7 +24,9 @@ jobs:
       - name: Set up GeckoDriver (Firefox) on Windows
         run: |
           choco install firefox
-          choco install geckodriver
+          Invoke-WebRequest -Uri https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-win64.zip -OutFile geckodriver.zip
+          Expand-Archive -Path geckodriver.zip -DestinationPath $Env:USERPROFILE/.drivers
+          $Env:PATH += ";$Env:USERPROFILE/.drivers"
 
       - name: Set up EdgeDriver on Windows
         run: |
@@ -55,7 +57,11 @@ jobs:
         uses: browser-actions/setup-chrome@v1
 
       - name: Set up GeckoDriver (Firefox) on macOS
-        run: brew install geckodriver
+        run: |
+          brew install firefox
+          wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-macos.tar.gz
+          tar -xzf geckodriver-v0.33.0-macos.tar.gz
+          sudo mv geckodriver /usr/local/bin/
 
       - name: Set up EdgeDriver on macOS
         run: brew install --cask microsoft-edge
@@ -87,10 +93,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y firefox
-          wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz
-          tar -xzf geckodriver-v0.30.0-linux64.tar.gz
+          wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
+          tar -xzf geckodriver-v0.33.0-linux64.tar.gz
           sudo mv geckodriver /usr/local/bin/
-          rm geckodriver-v0.30.0-linux64.tar.gz
 
       - name: Set up EdgeDriver on Ubuntu
         run: |
