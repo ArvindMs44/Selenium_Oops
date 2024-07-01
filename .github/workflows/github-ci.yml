@@ -19,10 +19,10 @@ jobs:
           cache: maven
 
       - name: Set up ChromeDriver on Windows
-        uses: actions/setup-chromedriver@v2
+        uses: browser-actions/setup-chrome@v1
 
       - name: Set up GeckoDriver (Firefox) on Windows
-        uses: mozilla/geckodriver@v0.30.0
+        uses: browser-actions/setup-geckodriver@v1
 
       - name: Set up EdgeDriver on Windows
         run: |
@@ -50,7 +50,7 @@ jobs:
           cache: maven
 
       - name: Set up ChromeDriver on macOS
-        uses: actions/setup-chromedriver@v2
+        uses: browser-actions/setup-chrome@v1
 
       - name: Set up GeckoDriver (Firefox) on macOS
         run: brew install geckodriver
@@ -79,7 +79,7 @@ jobs:
           cache: maven
 
       - name: Set up ChromeDriver on Ubuntu
-        uses: actions/setup-chromedriver@v2
+        uses: browser-actions/setup-chrome@v1
 
       - name: Set up GeckoDriver (Firefox) on Ubuntu
         run: sudo apt-get install -y firefox-geckodriver
