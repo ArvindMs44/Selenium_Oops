@@ -17,32 +17,9 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
           cache: maven
-
-      - name: Set up ChromeDriver on Windows
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Set up GeckoDriver (Firefox) on Windows
-        run: |
-          choco install firefox
-          Invoke-WebRequest -Uri https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-win64.zip -OutFile geckodriver.zip
-          Expand-Archive -Path geckodriver.zip -DestinationPath $Env:USERPROFILE/.drivers
-          $Env:PATH += ";$Env:USERPROFILE/.drivers"
-
-      - name: Set up EdgeDriver on Windows
-        run: |
-          choco install microsoft-edge
-          Invoke-WebRequest -Uri https://msedgedriver.azureedge.net/114.0.1823.51/edgedriver_win64.zip -OutFile msedgedriver.zip
-          Expand-Archive -Path msedgedriver.zip -DestinationPath $Env:USERPROFILE/.drivers
-          $Env:PATH += ";$Env:USERPROFILE/.drivers"
-
-      - name: Build and Test on Windows (Chrome)
-        run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-      - name: Build and Test on Windows (Firefox)
-        run: mvn compile test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-      - name: Build and Test on Windows (Edge)
-        run: mvn compile test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+          node-version: '20'
+      - name: Build and Test on Windows
+        run: mvn compile test "-Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml"
 
   test_macos:
     runs-on: macos-latest
@@ -54,33 +31,9 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
           cache: maven
-
-      - name: Set up ChromeDriver on macOS
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Set up GeckoDriver (Firefox) on macOS
-        run: |
-          brew install firefox
-          wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-macos.tar.gz
-          tar -xzf geckodriver-v0.33.0-macos.tar.gz
-          sudo mv geckodriver /usr/local/bin/
-
-      - name: Set up EdgeDriver on macOS
-        run: |
-          brew install --cask microsoft-edge
-          wget https://msedgedriver.azureedge.net/114.0.1823.51/edgedriver_mac64.zip
-          unzip edgedriver_mac64.zip
-          sudo mv msedgedriver /usr/local/bin/
-          sudo ln -s /usr/local/bin/msedgedriver /usr/local/bin/edgedriver
-
-      - name: Build and Test on macOS (Chrome)
-        run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-      - name: Build and Test on macOS (Firefox)
-        run: mvn compile test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-      - name: Build and Test on macOS (Edge)
-        run: mvn compile test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+          node-version: '20'
+      - name: Build and Test on macOS
+        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
 
   test_ubuntu:
     runs-on: ubuntu-latest
@@ -92,30 +45,6 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
           cache: maven
-
-      - name: Set up ChromeDriver on Ubuntu
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Set up GeckoDriver (Firefox) on Ubuntu
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y firefox
-          wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
-          tar -xzf geckodriver-v0.33.0-linux64.tar.gz
-          sudo mv geckodriver /usr/local/bin/
-
-      - name: Set up EdgeDriver on Ubuntu
-        run: |
-          wget https://msedgedriver.azureedge.net/114.0.1823.51/edgedriver_linux64.zip
-          unzip edgedriver_linux64.zip
-          sudo mv msedgedriver /usr/local/bin/
-          sudo ln -s /usr/local/bin/msedgedriver /usr/local/bin/edgedriver
-
-      - name: Build and Test on Ubuntu (Chrome)
-        run: mvn compile test -Dbrowser=chrome -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-      - name: Build and Test on Ubuntu (Firefox)
-        run: mvn compile test -Dbrowser=firefox -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
-
-      - name: Build and Test on Ubuntu (Edge)
-        run: mvn compile test -Dbrowser=edge -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
+          node-version: '20'
+      - name: Build and Test on Ubuntu
+        run: mvn compile test -Dsurefire.suiteXmlFiles=src/main/resources/testsuites/SmokeTest.xml
